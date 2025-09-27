@@ -2,6 +2,18 @@ import { AuthProvider } from "@refinedev/core";
 import { supabaseClient } from "./utility";
 import type { AuthUser } from "./types/auth";
 
+const getURL = () => {
+  let url =
+    import.meta.env.VITE_SITE_URL ?? // Set this to your site URL in production env.
+    import.meta.env.VITE_VERCEL_URL ?? // Automatically set by Vercel.
+    "http://localhost:3000/";
+  // Make sure to include `https://` when not localhost.
+  url = url.startsWith("http") ? url : `https://${url}`;
+  // Make sure to include a trailing `/`.
+  url = url.endsWith("/") ? url : `${url}/`;
+  return url;
+};
+
 const authProvider: AuthProvider = {
   login: async ({ email, password, providerName }) => {
     // sign in with oauth
@@ -9,6 +21,9 @@ const authProvider: AuthProvider = {
       if (providerName) {
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
           provider: providerName,
+          options: {
+            redirectTo: getURL(),
+          },
         });
 
         if (error) {
@@ -252,13 +267,18 @@ const authProvider: AuthProvider = {
     if (data?.user) {
       const user = data.user as AuthUser;
       const userMetadata = user.user_metadata || {};
-      
+
       return {
         id: user.id,
         email: user.email || "",
-        firstName: userMetadata.first_name || userMetadata.name?.split(" ")[0] || "",
-        lastName: userMetadata.last_name || userMetadata.name?.split(" ").slice(1).join(" ") || "",
-        fullName: userMetadata.full_name || userMetadata.name || user.email || "",
+        firstName:
+          userMetadata.first_name || userMetadata.name?.split(" ")[0] || "",
+        lastName:
+          userMetadata.last_name ||
+          userMetadata.name?.split(" ").slice(1).join(" ") ||
+          "",
+        fullName:
+          userMetadata.full_name || userMetadata.name || user.email || "",
         avatar: userMetadata.avatar_url || userMetadata.picture || "",
         provider: user.app_metadata?.provider || "email",
       };
