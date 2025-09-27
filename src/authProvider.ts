@@ -1,5 +1,6 @@
 import { AuthProvider } from "@refinedev/core";
 import { supabaseClient } from "./utility";
+import type { AuthUser } from "./types/auth";
 
 const authProvider: AuthProvider = {
   login: async ({ email, password, providerName }) => {
@@ -44,10 +45,10 @@ const authProvider: AuthProvider = {
           redirectTo: "/",
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error,
+        error: error as Error,
       };
     }
 
@@ -59,8 +60,30 @@ const authProvider: AuthProvider = {
       },
     };
   },
-  register: async ({ email, password }) => {
+  register: async ({ email, password, providerName }) => {
     try {
+      // OAuth registration
+      if (providerName) {
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+          provider: providerName,
+        });
+
+        if (error) {
+          return {
+            success: false,
+            error,
+          };
+        }
+
+        if (data?.url) {
+          return {
+            success: true,
+            redirectTo: "/",
+          };
+        }
+      }
+
+      // Email/password registration
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
@@ -79,10 +102,10 @@ const authProvider: AuthProvider = {
           redirectTo: "/",
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error,
+        error: error as Error,
       };
     }
 
@@ -115,10 +138,10 @@ const authProvider: AuthProvider = {
           success: true,
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error,
+        error: error as Error,
       };
     }
 
@@ -149,10 +172,10 @@ const authProvider: AuthProvider = {
           redirectTo: "/",
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error,
+        error: error as Error,
       };
     }
     return {
@@ -198,10 +221,10 @@ const authProvider: AuthProvider = {
           redirectTo: "/login",
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         authenticated: false,
-        error: error || {
+        error: (error as Error) || {
           message: "Check failed",
           name: "Not authenticated",
         },
@@ -227,9 +250,17 @@ const authProvider: AuthProvider = {
     const { data } = await supabaseClient.auth.getUser();
 
     if (data?.user) {
+      const user = data.user as AuthUser;
+      const userMetadata = user.user_metadata || {};
+      
       return {
-        ...data.user,
-        name: data.user.email,
+        id: user.id,
+        email: user.email || "",
+        firstName: userMetadata.first_name || userMetadata.name?.split(" ")[0] || "",
+        lastName: userMetadata.last_name || userMetadata.name?.split(" ").slice(1).join(" ") || "",
+        fullName: userMetadata.full_name || userMetadata.name || user.email || "",
+        avatar: userMetadata.avatar_url || userMetadata.picture || "",
+        provider: user.app_metadata?.provider || "email",
       };
     }
 

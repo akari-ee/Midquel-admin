@@ -27,7 +27,7 @@ import {
   useRefineOptions,
   type TreeMenuItem,
 } from "@refinedev/core";
-import { ChevronRight, ListIcon } from "lucide-react";
+import { ChevronRight, ListIcon, PanelRightIcon } from "lucide-react";
 import React from "react";
 
 export function Sidebar() {
@@ -63,6 +63,7 @@ export function Sidebar() {
           />
         ))}
       </ShadcnSidebarContent>
+      <SidebarFooter />
     </ShadcnSidebar>
   );
 }
@@ -363,4 +364,52 @@ function SidebarButton({
   );
 }
 
+function SidebarFooter() {
+  const { open, setOpen, isMobile } = useShadcnSidebar();
+
+  // 모바일에서는 하단 토글 버튼을 표시하지 않음
+  if (isMobile) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        "border-r",
+        "border-border",
+        "p-2",
+        "flex",
+        "justify-center",
+        "items-center",
+        "transition-all",
+        "duration-200",
+        {
+          "opacity-0": open,
+          "opacity-100": !open,
+          "pointer-events-none": open,
+          "pointer-events-auto": !open,
+        }
+      )}
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className={cn(
+          "h-8",
+          "w-8",
+          "p-0",
+          "hover:bg-accent",
+          "transition-colors",
+          "duration-200"
+        )}
+        title="사이드바 열기"
+      >
+        <PanelRightIcon className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+}
+
 Sidebar.displayName = "Sidebar";
+SidebarFooter.displayName = "SidebarFooter";

@@ -71,10 +71,10 @@ function MobileHeader() {
     >
       <SidebarTrigger
         className={cn("text-muted-foreground", "rotate-180", "ml-1", {
-          "opacity-0": open,
-          "opacity-100": !open || isMobile,
-          "pointer-events-auto": !open || isMobile,
-          "pointer-events-none": open && !isMobile,
+          "opacity-0": !isMobile,
+          "opacity-100": isMobile,
+          "pointer-events-auto": isMobile,
+          "pointer-events-none": !isMobile,
         })}
       />
 
