@@ -102,6 +102,11 @@ const authProvider: AuthProvider = {
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            approved: false,
+          },
+        },
       });
 
       if (error) {
@@ -267,7 +272,8 @@ const authProvider: AuthProvider = {
     if (data?.user) {
       const user = data.user as AuthUser;
       const userMetadata = user.user_metadata || {};
-
+      console.log(user);
+      console.log(userMetadata);
       return {
         id: user.id,
         email: user.email || "",

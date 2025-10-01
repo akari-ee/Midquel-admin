@@ -75,12 +75,20 @@ export const SignInForm = () => {
         )}
       </div>
 
-      <Card className={cn("sm:w-[456px]", "p-12", "mt-6")}>
+      <Card
+        className={cn(
+          "sm:w-[456px]",
+          "p-12",
+          "mt-6",
+          "shadow-none",
+          "rounded-none"
+        )}
+      >
         <CardHeader className={cn("px-0")}>
           <CardTitle
             className={cn(
-              "text-blue-600",
-              "dark:text-blue-400",
+              "text-neutral-800",
+              "dark:text-neutral-100",
               "text-3xl",
               "font-semibold"
             )}
@@ -90,7 +98,7 @@ export const SignInForm = () => {
           <CardDescription
             className={cn("text-muted-foreground", "font-medium")}
           >
-            Welcome back
+            Welcome back to Midquel Admin.
           </CardDescription>
         </CardHeader>
 
@@ -101,6 +109,7 @@ export const SignInForm = () => {
             <div className={cn("flex", "flex-col", "gap-2")}>
               <Label htmlFor="email">Email</Label>
               <Input
+                className="shadow-none"
                 id="email"
                 type="email"
                 placeholder=""
@@ -114,6 +123,7 @@ export const SignInForm = () => {
             >
               <Label htmlFor="password">Password</Label>
               <InputPassword
+                className="shadow-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -170,7 +180,7 @@ export const SignInForm = () => {
               <div className={cn("grid grid-cols-2", "gap-6")}>
                 <Button
                   variant="outline"
-                  className={cn("flex", "items-center", "gap-2")}
+                  className={cn("flex", "items-center", "gap-2", "shadow-none")}
                   onClick={handleSignInWithGoogle}
                   type="button"
                 >
@@ -191,7 +201,7 @@ export const SignInForm = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className={cn("flex", "items-center", "gap-2")}
+                  className={cn("flex", "items-center", "gap-2", "shadow-none")}
                   onClick={handleSignInWithGitHub}
                   type="button"
                 >

@@ -1,4 +1,4 @@
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, Refine, CanAccess } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
@@ -12,6 +12,8 @@ import { dataProvider, liveProvider } from "@refinedev/supabase";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import "./App.css";
 import authProvider from "./authProvider";
+import { accessControlProvider } from "./accessControlProvider";
+import { PendingApproval } from "@/components/refine-ui/layout/pending-approval";
 import { ErrorComponent } from "./components/refine-ui/layout/error-component";
 import { Layout } from "./components/refine-ui/layout/layout";
 import { Toaster } from "./components/refine-ui/notification/toaster";
@@ -44,6 +46,7 @@ function App() {
               dataProvider={dataProvider(supabaseClient)}
               liveProvider={liveProvider(supabaseClient)}
               authProvider={authProvider}
+              accessControlProvider={accessControlProvider}
               routerProvider={routerProvider}
               notificationProvider={useNotificationProvider()}
               resources={[
@@ -81,9 +84,11 @@ function App() {
                       key="authenticated-inner"
                       fallback={<CatchAllNavigate to="/login" />}
                     >
-                      <Layout>
-                        <Outlet />
-                      </Layout>
+                      <CanAccess resource="app" action="enter" fallback={<PendingApproval />}>
+                        <Layout>
+                          <Outlet />
+                        </Layout>
+                      </CanAccess>
                     </Authenticated>
                   }
                 >
