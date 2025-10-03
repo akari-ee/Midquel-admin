@@ -20,11 +20,11 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
+  ArchiveCreate,
+  ArchiveEdit,
+  ArchiveList,
+  ArchiveShow,
+} from "./pages/archive";
 import {
   CategoryCreate,
   CategoryEdit,
@@ -51,11 +51,11 @@ function App() {
               notificationProvider={useNotificationProvider()}
               resources={[
                 {
-                  name: "blog_posts",
-                  list: "/blog-posts",
-                  create: "/blog-posts/create",
-                  edit: "/blog-posts/edit/:id",
-                  show: "/blog-posts/show/:id",
+                  name: "archive",
+                  list: "/archive",
+                  create: "/archive/create",
+                  edit: "/archive/edit/:id",
+                  show: "/archive/show/:id",
                   meta: {
                     canDelete: true,
                   },
@@ -94,13 +94,13 @@ function App() {
                 >
                   <Route
                     index
-                    element={<NavigateToResource resource="blog_posts" />}
+                    element={<NavigateToResource resource="archive" />}
                   />
-                  <Route path="/blog-posts">
-                    <Route index element={<BlogPostList />} />
-                    <Route path="create" element={<BlogPostCreate />} />
-                    <Route path="edit/:id" element={<BlogPostEdit />} />
-                    <Route path="show/:id" element={<BlogPostShow />} />
+                  <Route path="/archive">
+                    <Route index element={<ArchiveList />} />
+                    <Route path="create" element={<ArchiveCreate />} />
+                    <Route path="edit/:id" element={<ArchiveEdit />} />
+                    <Route path="show/:id" element={<ArchiveShow />} />
                   </Route>
                   <Route path="/categories">
                     <Route index element={<CategoryList />} />

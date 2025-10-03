@@ -1,4 +1,4 @@
-import { useOne, useShow } from "@refinedev/core";
+import { useShow } from "@refinedev/core";
 
 import { ShowView } from "@/components/refine-ui/views/show-view";
 import { Badge } from "@/components/ui/badge";
@@ -11,24 +11,12 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export const BlogPostShow = () => {
-  const { result: record, query } = useShow({
+export const ArchiveShow = () => {
+  const { result: record } = useShow({
     meta: {
-      select: "*, categories(id,title)",
+      select: "*",
     },
   });
-
-  const {
-    result: category,
-    query: { isLoading: categoryIsLoading },
-  } = useOne({
-    resource: "categories",
-    id: record?.categories?.id || "",
-    queryOptions: {
-      enabled: !!record,
-    },
-  });
-  const { isLoading } = query;
 
   return (
     <ShowView>
@@ -53,33 +41,38 @@ export const BlogPostShow = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium mb-2">Category</h4>
-              <p className="text-sm text-muted-foreground">
-                {categoryIsLoading ? "Loading..." : category?.title || "-"}
-              </p>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h4 className="text-sm font-medium mb-2">Created At</h4>
-              <p className="text-sm text-muted-foreground">
-                {record?.createdAt
-                  ? new Date(record.createdAt).toLocaleDateString()
-                  : "-"}
-              </p>
-            </div>
-
-            <Separator />
-
-            <div>
               <h4 className="text-sm font-medium mb-4">Content</h4>
               <div className="prose prose-sm max-w-none">
-                {record?.content ? (
-                  <div dangerouslySetInnerHTML={{ __html: record.content }} />
+                {record?.info ? (
+                  <div dangerouslySetInnerHTML={{ __html: record.info }} />
                 ) : (
                   <p className="text-muted-foreground">No content available</p>
                 )}
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Slug</h4>
+                <p className="text-sm text-muted-foreground">{record?.slug || "-"}</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">Year</h4>
+                <p className="text-sm text-muted-foreground">{record?.year || "-"}</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">Location</h4>
+                <p className="text-sm text-muted-foreground">{record?.location || "-"}</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">Tag</h4>
+                <p className="text-sm text-muted-foreground">{record?.tag || "-"}</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-2">Homepage Featured</h4>
+                <p className="text-sm text-muted-foreground">{record?.homepage_featured ? "Yes" : "No"}</p>
               </div>
             </div>
           </CardContent>
@@ -88,3 +81,5 @@ export const BlogPostShow = () => {
     </ShowView>
   );
 };
+
+

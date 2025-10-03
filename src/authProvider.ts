@@ -272,8 +272,7 @@ const authProvider: AuthProvider = {
     if (data?.user) {
       const user = data.user as AuthUser;
       const userMetadata = user.user_metadata || {};
-      console.log(user);
-      console.log(userMetadata);
+      
       return {
         id: user.id,
         email: user.email || "",

@@ -1,4 +1,3 @@
-import { useList } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
@@ -10,45 +9,59 @@ import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { ListView } from "@/components/refine-ui/views/list-view";
 import { Badge } from "@/components/ui/badge";
 
-type BlogPost = {
+type ArchiveItem = {
   id: string;
+  slug: string;
   title: string;
-  content: string;
-  status: string;
-  createdAt: string;
-  categories: { id: string; title: string };
+  homepage_featured: boolean;
+  tagline: string | null;
+  year: string | null;
+  location: string | null;
+  info: string | null;
+  tag: string | null;
+  thumbnail_image: string | null;
+  images: unknown;
 };
 
-export const BlogPostList = () => {
-  // fetch all categories to use in the combobox filter
-  const {
-    result: { data: categories },
-    query: { isLoading: categoryIsLoading },
-  } = useList({
-    resource: "categories",
-    pagination: {
-      currentPage: 1,
-      pageSize: 999,
-    },
-  });
-
+export const ArchiveList = () => {
   const columns = React.useMemo(() => {
-    const columnHelper = createColumnHelper<BlogPost>();
+    const columnHelper = createColumnHelper<ArchiveItem>();
 
     return [
       columnHelper.accessor("id", {
         id: "id",
         header: "ID",
+        enableSorting: true,
+      }),
+      columnHelper.accessor("thumbnail_image", {
+        id: "thumbnail",
+        header: "Thumbnail",
         enableSorting: false,
+        cell: ({ getValue }) => {
+          const url = getValue();
+          if (!url) return "-";
+          return (
+            <img
+              src={String(url)}
+              alt="thumb"
+              className="h-10 w-10 object-cover rounded"
+            />
+          );
+        },
       }),
       columnHelper.accessor("title", {
         id: "title",
         header: "Title",
         enableSorting: true,
       }),
-      columnHelper.accessor("content", {
-        id: "content",
-        header: "Content",
+      columnHelper.accessor("slug", {
+        id: "slug",
+        header: "Slug",
+        enableSorting: true,
+      }),
+      columnHelper.accessor("info", {
+        id: "info",
+        header: "Info",
         enableSorting: false,
         cell: ({ getValue }) => {
           const content = getValue();
@@ -58,36 +71,32 @@ export const BlogPostList = () => {
           );
         },
       }),
-      columnHelper.accessor("categories.title", {
-        id: "category",
-        header: "Category",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const categoryId = row.original.categories?.id;
-          const category = categories?.find((item) => item.id === categoryId);
-          return categoryIsLoading ? "Loading..." : category?.title || "-";
-        },
+      columnHelper.accessor("year", {
+        id: "year",
+        header: "Year",
+        enableSorting: true,
       }),
-      columnHelper.accessor("status", {
-        id: "status",
-        header: "Status",
+      columnHelper.accessor("location", {
+        id: "location",
+        header: "Location",
+        enableSorting: true,
+      }),
+      columnHelper.accessor("tag", {
+        id: "tag",
+        header: "Tag",
+        enableSorting: true,
+      }),
+      columnHelper.accessor("homepage_featured", {
+        id: "homepage_featured",
+        header: "Featured",
         enableSorting: true,
         cell: ({ getValue }) => {
-          const status = getValue();
+          const featured = Boolean(getValue());
           return (
-            <Badge variant={status === "published" ? "default" : "secondary"}>
-              {status}
+            <Badge variant={featured ? "default" : "secondary"}>
+              {featured ? "Yes" : "No"}
             </Badge>
           );
-        },
-      }),
-      columnHelper.accessor("createdAt", {
-        id: "createdAt",
-        header: "Created At",
-        enableSorting: true,
-        cell: ({ getValue }) => {
-          const date = getValue();
-          return date ? new Date(date).toLocaleDateString() : "-";
         },
       }),
       columnHelper.display({
@@ -104,14 +113,22 @@ export const BlogPostList = () => {
         size: 290,
       }),
     ];
-  }, [categories, categoryIsLoading]);
+  }, []);
 
   const table = useTable({
     columns,
     refineCoreProps: {
       syncWithLocation: true,
       meta: {
-        select: "*, categories(id,title)",
+        select: "*",
+      },
+      sorters: {
+        initial: [
+          {
+            field: "year", // 정렬 기준 필드
+            order: "desc", // "asc" 또는 "desc"
+          },
+        ],
       },
     },
   });
