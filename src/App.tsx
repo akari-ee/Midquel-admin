@@ -26,11 +26,11 @@ import {
   ArchiveShow,
 } from "./pages/archive";
 import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
+  FilmCreate,
+  FilmEdit,
+  FilmList,
+  FilmShow,
+} from "./pages/film";
 import { ForgotPassword } from "./pages/forgot-password";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
@@ -61,11 +61,11 @@ function App() {
                   },
                 },
                 {
-                  name: "categories",
-                  list: "/categories",
-                  create: "/categories/create",
-                  edit: "/categories/edit/:id",
-                  show: "/categories/show/:id",
+                  name: "film",
+                  list: "/film",
+                  create: "/film/create",
+                  edit: "/film/edit/:id",
+                  show: "/film/show/:id",
                   meta: {
                     canDelete: true,
                   },
@@ -102,11 +102,11 @@ function App() {
                     <Route path="edit/:id" element={<ArchiveEdit />} />
                     <Route path="show/:id" element={<ArchiveShow />} />
                   </Route>
-                  <Route path="/categories">
-                    <Route index element={<CategoryList />} />
-                    <Route path="create" element={<CategoryCreate />} />
-                    <Route path="edit/:id" element={<CategoryEdit />} />
-                    <Route path="show/:id" element={<CategoryShow />} />
+                  <Route path="/film">
+                    <Route index element={<FilmList />} />
+                    <Route path="create" element={<FilmCreate />} />
+                    <Route path="edit/:id" element={<FilmEdit />} />
+                    <Route path="show/:id" element={<FilmShow />} />
                   </Route>
                   <Route path="*" element={<ErrorComponent />} />
                 </Route>
