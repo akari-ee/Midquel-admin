@@ -9,7 +9,7 @@ import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { ListView } from "@/components/refine-ui/views/list-view";
 import { Badge } from "@/components/ui/badge";
 
-type ArchiveItem = {
+export type ArchiveItem = {
   id: string;
   slug: string;
   title: string;
@@ -44,7 +44,7 @@ export const ArchiveList = () => {
             <img
               src={String(url)}
               alt="thumb"
-              className="h-10 w-10 object-cover rounded"
+              className="h-40 w-40 object-cover rounded"
             />
           );
         },
