@@ -8,6 +8,7 @@ import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { ListView } from "@/components/refine-ui/views/list-view";
 import { Badge } from "@/components/ui/badge";
+import { CreateButton } from "@/components/refine-ui/buttons/create";
 
 export type ArchiveItem = {
   id: string;
@@ -134,8 +135,11 @@ export const ArchiveList = () => {
   });
 
   return (
-    <ListView>
-      <DataTable table={table} />
-    </ListView>
+    <main className="flex flex-col gap-4">
+      <CreateButton />
+      <ListView>
+        <DataTable table={table} />
+      </ListView>
+    </main>
   );
 };
